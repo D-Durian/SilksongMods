@@ -26,8 +26,9 @@ namespace EasyMode1.Patches
             int reduced = (int)Math.Round(damage * DamageTakenMultiplier);
             if (reduced < 1) reduced = 1; // nie auf 0 fallen lassen
 
-            // Debug (optional): auskommentieren, wenn‘s nervt
-            // EasyMode1.Plugin.Log?.LogInfo($"[IncomingDamagePatch] {old} -> {reduced}");
+            // Optionales Debug-Logging
+            if (EasyMode1.Plugin.DebugLogs)
+                EasyMode1.Plugin.Log?.LogInfo($"[IncomingDamagePatch] {old} -> {reduced}");
 
             damage = reduced;
         }

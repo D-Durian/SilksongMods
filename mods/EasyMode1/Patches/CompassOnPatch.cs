@@ -1,6 +1,6 @@
 using System;
 using HarmonyLib;
-using GlobalSettings;     // für Gameplay.CompassTool
+using GlobalSettings;     // for Gameplay.* (Silksong assemblies)
 using UnityEngine;
 
 namespace EasyMode1.Patches

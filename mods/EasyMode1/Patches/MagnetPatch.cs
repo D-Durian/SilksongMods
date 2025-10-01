@@ -13,7 +13,7 @@ namespace EasyMode1.Patches
         {
             try
             {
-                var key = ___popupName?.Key;
+                var key = ___popupName.Key;
 
                 if (string.Equals(key, "INV_NAME_COIN", StringComparison.OrdinalIgnoreCase)
                     && ___magnetTool != null && ___magnetTool.IsUnlocked)

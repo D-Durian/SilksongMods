@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
+using GlobalSettings;
 // ToolItem & Gameplay.* stecken in Assembly-CSharp
 
 namespace EasyMode1.Patches

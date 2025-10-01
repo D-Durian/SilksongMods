@@ -9,8 +9,7 @@ namespace EasyMode1.Patches
     [HarmonyPatch(typeof(HealthManager), "TakeDamage", new System.Type[] { typeof(HitInstance) })]
     internal static class OutgoingDamagePatch
     {
-        private const float OutgoingMultiplier = 1.20f; // +20 %
-        private const bool DebugLogs = false;           // bei Bedarf true setzen
+    private const float OutgoingMultiplier = 1.20f; // +20 %
 
         [HarmonyPrefix]
         private static void Prefix(ref HitInstance hitInstance)
@@ -22,7 +21,7 @@ namespace EasyMode1.Patches
             float old = hitInstance.Multiplier;
             hitInstance.Multiplier *= OutgoingMultiplier;
 
-            if (DebugLogs)
+            if (EasyMode1.Plugin.DebugLogs)
                 EasyMode1.Plugin.Log?.LogInfo($"[OutgoingDamagePatch] Mult {old} -> {hitInstance.Multiplier}");
         }
     }

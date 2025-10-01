@@ -26,8 +26,8 @@ namespace EasyMode1.Patches
             int boosted = (int)Math.Round(amount * RosaryMultiplier);
             if (boosted < 1) boosted = 1;
 
-            // Debug (optional): zum Testen aktivieren
-            // EasyMode1.Plugin.Log?.LogInfo($"[RosaryGainPatch] {old} -> {boosted}");
+            if (EasyMode1.Plugin.DebugLogs)
+                EasyMode1.Plugin.Log?.LogInfo($"[RosaryGainPatch] {old} -> {boosted}");
 
             amount = boosted;
         }
