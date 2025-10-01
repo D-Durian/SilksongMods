@@ -1,0 +1,18 @@
+# IDE/Build
+bin/
+obj/
+.vs/
+*.user
+*.suo
+.idea/
+
+# Logs
+*.log
+
+# Keine Spiel-/BepInEx-Dateien ins Repo
+Hollow Knight Silksong_Data/
+BepInEx/
+
+# Keine Build-Artefakte/DLLs
+*.dll
+*.pdb
