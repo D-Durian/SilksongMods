@@ -7,13 +7,17 @@ namespace EasyMode1.Patches
     [HarmonyPatch(typeof(HeroController), "TickDeliveryItems")]
     internal static class NoDeliveryTimerPatch
     {
+        private static bool _loggedOnce;
         [HarmonyPrefix]
         private static bool Prefix()
         {
             try
             {
-                if (EasyMode1.Plugin.DebugLogs)
+                if (EasyMode1.Plugin.DebugLogs && !_loggedOnce)
+                {
                     EasyMode1.Plugin.Log?.LogInfo("[NoDeliveryTimerPatch] skipping TickDeliveryItems (no delivery timers)");
+                    _loggedOnce = true;
+                }
 
                 // false = Original NICHT ausführen -> Timer werden effektiv deaktiviert
                 return false;

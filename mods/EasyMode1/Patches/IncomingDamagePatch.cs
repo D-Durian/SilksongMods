@@ -1,36 +1,58 @@
 // Patches/IncomingDamagePatch.cs
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 
 namespace EasyMode1.Patches
 {
     /// <summary>
-    /// Reduziert eingehenden Schaden um 30 %.
-    /// Greift auf alle HeroController.TakeDamage-Überladungen,
-    /// deren erstes Argument der Schadenswert (int) ist.
+    /// Reduziert eingehenden Schaden um 30 % deterministisch.
+    /// Greift direkt in PlayerData.TakeHealth(int amount) ein (finale int-Schadensgröße),
+    /// vermeidet damit Rundungen auf Float-Basis und abstruse Werte.
     /// </summary>
-    [HarmonyPatch(typeof(HeroController))]
+    [HarmonyPatch(typeof(PlayerData))]
     public static class IncomingDamagePatch
     {
-        private const float DamageTakenMultiplier = 0.70f; // -30 %
+        // -30 %: integerbasiert via (amount * 70) / 100
+        private const int DamagePercent = 70; // 70 % des ursprünglichen Schadens
 
-        // Patcht jede Methode namens "TakeDamage" (Überladungen inkl.),
-        // bei der das 1. Argument (Index 0) ein int-Schaden ist.
-        [HarmonyPatch("TakeDamage")]
-        [HarmonyPrefix]
-        private static void AnyTakeDamagePrefix([HarmonyArgument(0)] ref int damage)
+        // Patche alle Überladungen von TakeHealth, deren erstes Argument ein int ist
+        static IEnumerable<MethodBase> TargetMethods()
         {
-            if (damage <= 0) return;
+            return typeof(PlayerData)
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(m => m.Name == "TakeHealth")
+                .Where(m =>
+                {
+                    var p = m.GetParameters();
+                    return p.Length >= 1 && p[0].ParameterType == typeof(int);
+                });
+        }
 
-            int old = damage;
-            int reduced = (int)Math.Round(damage * DamageTakenMultiplier);
-            if (reduced < 1) reduced = 1; // nie auf 0 fallen lassen
+        [HarmonyPrefix]
+        private static void Prefix([HarmonyArgument(0)] ref int amount)
+        {
+            if (amount <= 0) return;
 
-            // Optionales Debug-Logging
+            // Sanity-Check: sehr große Werte ignorieren (andere Mods/Überläufe)
+            if (amount > 100000)
+            {
+                if (EasyMode1.Plugin.DebugLogs)
+                    EasyMode1.Plugin.Log?.LogWarning($"[IncomingDamagePatch] abnormal amount {amount}, skip scaling");
+                return;
+            }
+
+            int old = amount;
+            // Deterministische Skalierung ohne Floating-Point-Rundung (Floor durch Integer-Division)
+            int reduced = (old * DamagePercent) / 100;
+            if (reduced < 1) reduced = 1; // nie auf 0 fallen lassen (anpassbar)
+
             if (EasyMode1.Plugin.DebugLogs)
                 EasyMode1.Plugin.Log?.LogInfo($"[IncomingDamagePatch] {old} -> {reduced}");
 
-            damage = reduced;
+            amount = reduced;
         }
     }
 }

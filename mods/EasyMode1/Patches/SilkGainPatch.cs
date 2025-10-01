@@ -9,7 +9,7 @@ namespace EasyMode1.Patches
     })]
     public static class SilkGainPatch
     {
-        private const float SilkMultiplier = 1.5f; // +50%
+        private const float SilkMultiplier = 2f; // +100%
         private const bool DebugLogs = true;       // zum schnellen Ein-/Ausschalten
 
         [HarmonyPrefix]
@@ -18,7 +18,7 @@ namespace EasyMode1.Patches
             if (amount <= 0) return;
 
             int old = amount;
-            int boosted = (int)Math.Round(amount * SilkMultiplier);
+            int boosted = EasyMode1.Plugin.RoundRandomly(amount * SilkMultiplier);
             if (boosted < 1) boosted = 1;
 
             if (DebugLogs)

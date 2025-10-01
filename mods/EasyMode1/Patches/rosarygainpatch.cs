@@ -14,20 +14,20 @@ namespace EasyMode1.Patches
         private const float RosaryMultiplier = 1.5f; // x1.5 statt x2
 
         [HarmonyPrefix]
-        private static void Prefix(string key, ref int amount)
+        private static void Prefix([HarmonyArgument(0)] string intName, ref int amount)
         {
             // Nur Rosaries (intern "geo") und nur Gewinne anfassen
-            if (!string.Equals(key, "geo", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(intName, "geo", StringComparison.OrdinalIgnoreCase))
                 return;
             if (amount <= 0)
                 return;
 
             int old = amount;
-            int boosted = (int)Math.Round(amount * RosaryMultiplier);
+            int boosted = EasyMode1.Plugin.RoundRandomly(amount * RosaryMultiplier);
             if (boosted < 1) boosted = 1;
 
             if (EasyMode1.Plugin.DebugLogs)
-                EasyMode1.Plugin.Log?.LogInfo($"[RosaryGainPatch] {old} -> {boosted}");
+                EasyMode1.Plugin.Log?.LogInfo($"[RosaryGainPatch] geo {old} -> {boosted}");
 
             amount = boosted;
         }
