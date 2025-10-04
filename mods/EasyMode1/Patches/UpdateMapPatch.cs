@@ -17,6 +17,8 @@ namespace EasyMode1.Patches
         {
             try
             {
+                if (!Plugin.EnableUpdateMapOnQuickOpen)
+                    return;
                 var pd = PlayerData.instance;
                 var gm = GameManager.instance;
 

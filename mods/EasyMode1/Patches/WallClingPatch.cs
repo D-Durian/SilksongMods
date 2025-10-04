@@ -16,6 +16,7 @@ namespace EasyMode1.Patches
 
         private static void Apply(object __instance, ref bool __result)
         {
+            if (!Plugin.EnableWallClingUnlocked) return;
             // wenn schon true, nichts ändern
             if (__result) return;
 

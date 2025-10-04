@@ -21,6 +21,8 @@ namespace EasyMode1.Patches
         {
             try
             {
+                if (!Plugin.EnableCompassAlwaysOn)
+                    return true;
                 // Szene-Referenz aktualisieren (wie im Fremdmod)
                 __instance.UpdateCurrentScene();
 

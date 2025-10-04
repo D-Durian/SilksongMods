@@ -42,7 +42,7 @@ namespace EasyMode1.Patches
                 FiParryAttack.SetValue(cst, true);
 
             if (EasyMode1.Plugin.DebugLogs)
-                EasyMode1.Plugin.Log?.LogInfo($"[ParryGrace] granted parry in +{ParryWindowTracker.ExtraParryGraceSeconds:0.###}s window");
+                EasyMode1.Plugin.Log?.LogInfo($"[ParryGrace] granted parry in +{Plugin.ExtraParryGraceSeconds:0.###}s window");
 
             // Original-CheckParry überspringen – Parry wurde bereits ausgelöst
             return false;

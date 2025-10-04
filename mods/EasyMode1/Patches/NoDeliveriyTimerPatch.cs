@@ -13,6 +13,8 @@ namespace EasyMode1.Patches
         {
             try
             {
+                if (!Plugin.EnableNoDeliveryTimer)
+                    return true; // Feature aus -> Original laufen lassen
                 if (EasyMode1.Plugin.DebugLogs && !_loggedOnce)
                 {
                     EasyMode1.Plugin.Log?.LogInfo("[NoDeliveryTimerPatch] skipping TickDeliveryItems (no delivery timers)");

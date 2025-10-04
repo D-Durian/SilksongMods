@@ -12,7 +12,7 @@ namespace EasyMode1.Patches
     [HarmonyPatch(typeof(HeroController), nameof(HeroController.SetDashCooldownTimer))]
     internal static class DashCooldownSetterPatch
     {
-        private const float DashCooldownMultiplier = 0.1f; // HIER anpassen (0.5f = halb so lang)
+    // Werte aus Plugin.Config
 
         private static readonly FieldInfo FiDashCD     = AccessTools.Field(typeof(HeroController), "dashCooldownTimer");
         private static readonly FieldInfo FiBackDashCD = AccessTools.Field(typeof(HeroController), "backDashCooldownTimer"); // kann null sein
@@ -20,13 +20,14 @@ namespace EasyMode1.Patches
         [HarmonyPostfix]
         private static void Postfix(object __instance)
         {
-            if (DashCooldownMultiplier >= 1f) return;
+            if (!Plugin.EnableDashCooldownAdjust) return;
+            if (Plugin.DashCooldownMultiplier >= 1f) return;
 
             // Haupt-Dash
             if (FiDashCD != null)
             {
                 float cur  = (float)FiDashCD.GetValue(__instance);
-                float next = Mathf.Max(0f, cur * DashCooldownMultiplier);
+                float next = Mathf.Max(0f, cur * Plugin.DashCooldownMultiplier);
                 if (next != cur)
                 {
                     FiDashCD.SetValue(__instance, next);
@@ -41,7 +42,7 @@ namespace EasyMode1.Patches
                 float curB = (float)FiBackDashCD.GetValue(__instance);
                 if (curB > 0f)
                 {
-                    float nextB = Mathf.Max(0f, curB * DashCooldownMultiplier);
+                    float nextB = Mathf.Max(0f, curB * Plugin.DashCooldownMultiplier);
                     if (nextB != curB)
                     {
                         FiBackDashCD.SetValue(__instance, nextB);

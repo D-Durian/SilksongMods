@@ -9,7 +9,7 @@ namespace EasyMode1.Patches
     {
         // Stell hier ein, wie „großzügig“ das Fenster nach dem normalen Parry sein soll.
         // 0.12f ≈ ~7 Frames @60fps. Für mehr, z. B. 0.18f.
-        internal const float ExtraParryGraceSeconds = 0.12f;
+    // Wert aus Plugin.Config
 
         internal static float GraceUntil;
 
@@ -26,7 +26,7 @@ namespace EasyMode1.Patches
             if (FiParrying == null) return;
 
             if ((bool)FiParrying.GetValue(cst))
-                GraceUntil = Time.time + ExtraParryGraceSeconds;  // Gnadenzeit läuft ab, wenn Parry endet
+                GraceUntil = Time.time + Plugin.ExtraParryGraceSeconds;  // Gnadenzeit läuft ab, wenn Parry endet
         }
     }
 }

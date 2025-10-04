@@ -11,7 +11,7 @@ namespace EasyMode1.Patches
     [HarmonyPatch(typeof(HeroController), "Invulnerable")]
     internal static class IFrames_ClampInvulnerable
     {
-        private const float MinIFrames = 0.7f;
+    // Wert aus Plugin.Config
 
         // private float invulnerableDuration;
         private static readonly FieldInfo FiInvulnDuration =
@@ -24,12 +24,14 @@ namespace EasyMode1.Patches
         [HarmonyPrefix]
         private static void Prefix(object __instance)
         {
+            if (!Plugin.EnableIFramesClamp) return;
             if (FiInvulnDuration == null) return;
 
             try
             {
                 float cur = (float)FiInvulnDuration.GetValue(__instance);
-                float next = cur < MinIFrames ? MinIFrames : cur;
+                float min = Math.Max(0f, Plugin.MinIFramesSeconds);
+                float next = cur < min ? min : cur;
                 if (next != cur)
                 {
                     FiInvulnDuration.SetValue(__instance, next);

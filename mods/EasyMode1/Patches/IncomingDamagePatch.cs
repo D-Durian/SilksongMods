@@ -34,6 +34,7 @@ namespace EasyMode1.Patches
         [HarmonyPrefix]
         private static void Prefix([HarmonyArgument(0)] ref int amount)
         {
+            if (!Plugin.EnableIncomingDamage) return;
             if (amount <= 0) return;
 
             // Sanity-Check: sehr große Werte ignorieren (andere Mods/Überläufe)
@@ -46,7 +47,8 @@ namespace EasyMode1.Patches
 
             int old = amount;
             // Deterministische Skalierung ohne Floating-Point-Rundung (Floor durch Integer-Division)
-            int reduced = (old * DamagePercent) / 100;
+            int percent = Math.Max(0, Math.Min(100, Plugin.DamageTakenPercent));
+            int reduced = (old * percent) / 100;
             if (reduced < 1) reduced = 1; // nie auf 0 fallen lassen (anpassbar)
 
             if (EasyMode1.Plugin.DebugLogs)

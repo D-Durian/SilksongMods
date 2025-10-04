@@ -14,12 +14,14 @@ namespace EasyMode1.Patches
         [HarmonyPrefix]
         private static void Prefix(ref HitInstance hitInstance)
         {
+            if (!Plugin.EnableOutgoingDamage) return;
             // Nur Schaden, der VOM Helden kommt, verstärken
             if (!hitInstance.IsHeroDamage) return;
 
             // Multiplikativ verstärken – integriert sich sauber mit anderem Balancing
             float old = hitInstance.Multiplier;
-            hitInstance.Multiplier *= OutgoingMultiplier;
+            float mult = Plugin.OutgoingMultiplier > 0f ? Plugin.OutgoingMultiplier : 1f;
+            hitInstance.Multiplier *= mult;
 
             if (EasyMode1.Plugin.DebugLogs)
                 EasyMode1.Plugin.Log?.LogInfo($"[OutgoingDamagePatch] Mult {old} -> {hitInstance.Multiplier}");

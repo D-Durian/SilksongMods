@@ -9,19 +9,19 @@ namespace EasyMode1.Patches
     })]
     public static class SilkGainPatch
     {
-        private const float SilkMultiplier = 2f; // +100%
-        private const bool DebugLogs = true;       // zum schnellen Ein-/Ausschalten
+    // Werte aus Plugin.Config
 
         [HarmonyPrefix]
         private static void Prefix(ref int amount)
         {
+            if (!Plugin.EnableSilkGain) return;
             if (amount <= 0) return;
 
             int old = amount;
-            int boosted = EasyMode1.Plugin.RoundRandomly(amount * SilkMultiplier);
+            int boosted = EasyMode1.Plugin.RoundRandomly(amount * Plugin.SilkMultiplier);
             if (boosted < 1) boosted = 1;
 
-            if (DebugLogs)
+            if (EasyMode1.Plugin.DebugLogs)
                 EasyMode1.Plugin.Log?.LogInfo($"[SilkGainPatch] {old} -> {boosted}");
 
             amount = boosted;

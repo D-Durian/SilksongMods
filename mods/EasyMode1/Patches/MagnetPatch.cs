@@ -20,7 +20,11 @@ namespace EasyMode1.Patches
                 {
                     __result = true; // Magnet aktiv
                     if (EasyMode1.Plugin.DebugLogs)
-                        EasyMode1.Plugin.Log?.LogInfo("[RosaryMagnetPatch] forced magnet for COIN (tool unlocked)");
+                    {
+                        _throttleCounter++;
+                        if ((_throttleCounter % 50) == 1)
+                            EasyMode1.Plugin.Log?.LogInfo("[RosaryMagnetPatch] forced magnet for COIN (tool unlocked) [throttled]");
+                    }
                     return false;    // Original überspringen
                 }
 
@@ -32,5 +36,7 @@ namespace EasyMode1.Patches
                 return true;
             }
         }
+
+    private static int _throttleCounter = 0;
     }
 }
